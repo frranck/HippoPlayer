@@ -55,6 +55,50 @@ typedef struct HippoIoAPI {
 
 #define HIPPO_FILE_API_VERSION 1
 
+struct HippoMetadataAPIPrivData;
+
+enum HippoMetaKeyType {
+    HippoMetadataKey_Title,
+    HippoMetadataKey_Type,
+    HippoMetadataKey_Duration,
+    HippoMetadataKey_AuthoringTool,
+    HippoMetadataKey_Artist,
+    HippoMetadataKey_Date,
+    HippoMetadataKey_Message,
+    HippoMetadataKey_SubSongs,
+    HippoMetadataKey_ChannelsCount,
+    HippoMetadataKey_PatternsCount,
+    HippoMetadataKey_PatternNames,
+    HippoMetadataKey_SampleCount,
+    HippoMetadataKey_Samples,
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+typedef struct HippoMetadataAPI {
+    //
+    // Get a key associated with buffer.
+    //
+    // priv_data = send in priv_data pointer from this struct.
+    // buffer = filename, url/stream, etc associated with the key
+    // type = Key to retrive
+    //
+    const char* (*get_key)(struct HippoMetadataAPIPrivData* priv_data, const char* buffer, enum HippoMetaKeyType type);
+
+    //
+    // Set a key associated with buffer.
+    //
+    // priv_data = send in priv_data pointer from this struct.
+    // buffer = filename, url/stream, etc associated with the key
+    // value = value to set with the key
+    // type = Key to retrive
+    //
+    void (*set_key)(struct HippoMetadataAPIPrivData* priv_data, const char* buffer, const char* value, enum HippoMetaKeyType type);
+
+	struct HippoMetadataAPIPrivData* priv_data;
+} HippoMetadataAPI;
+
+
 struct HippoServicePrivData;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
