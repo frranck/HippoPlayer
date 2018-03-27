@@ -90,7 +90,7 @@ static int hively_close(void* userData) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // TODO: These checks needs to be made much better (sanity check some more sizes in the pattern etc)
 
-enum HippoProbeResult hively_probe_can_play(const uint8_t* data, uint32_t data_size, uint64_t total_size) {
+enum HippoProbeResult hively_probe_can_play(const uint8_t* data, uint32_t data_size, const char* filename, uint64_t total_size) {
 	if ((data[0] == 'T') &&
 		(data[1] == 'H') &&
 		(data[2] == 'X') &&
