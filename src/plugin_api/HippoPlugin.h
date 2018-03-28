@@ -57,7 +57,7 @@ typedef struct HippoIoAPI {
 
 struct HippoMetadataAPIPrivData;
 
-enum HippoMetaKeyType {
+enum HippoMetadataKey {
     HippoMetadataKey_Title,
     HippoMetadataKey_Type,
     HippoMetadataKey_Duration,
@@ -73,18 +73,34 @@ enum HippoMetaKeyType {
     HippoMetadataKey_Samples,
 };
 
+enum HippoMetaEncoding {
+	HippoMetaEncoding_UTF8,
+	HippoMetaEncoding_ShiftJS2,
+};
+
+enum HippoMetadataResult {
+	HippoMetadataResult_KeyNotFound = 0,
+	HippoMetadataResult_UnableToMakeQuery = -1,
+};
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 typedef struct HippoMetadataAPI {
     //
-    // Get a key associated with buffer.
+    // Get a string key associated with buffer.
     //
     // priv_data = send in priv_data pointer from this struct.
     // buffer = filename, url/stream, etc associated with the key
     // type = Key to retrive
+    // error_code = HippoMetadataResult (may be NULL)
+    // Returns data for the key. If there is an error (such as key not found) the return value will be NULL and
+    // the error code will be updated.
     //
-    const char* (*get_key)(struct HippoMetadataAPIPrivData* priv_data, const char* buffer, enum HippoMetaKeyType type);
-
+    const char* (*get_key)(
+    	struct HippoMetadataAPIPrivData* priv_data, 
+    	const char* buffer, 
+    	enum HippoMetadataKey type, 
+    	int* error_code);
     //
     // Set a key associated with buffer.
     //
@@ -92,12 +108,39 @@ typedef struct HippoMetadataAPI {
     // buffer = filename, url/stream, etc associated with the key
     // value = value to set with the key
     // type = Key to retrive
+    // 
+    // HippoMetadataResult
     //
-    void (*set_key)(struct HippoMetadataAPIPrivData* priv_data, const char* buffer, const char* value, enum HippoMetaKeyType type);
+    int (*set_key)(
+    	struct HippoMetadataAPIPrivData* priv_data, 
+    	const char* buffer, 
+    	const char* value, 
+    	enum HippoMetadataKey type);
+
+    //
+    // Set a key associated with buffer with specific ecoding.
+    //
+    // In some cases the text you want to set may not be UTF-8 and this will convert from another encoding for you as HippoPlayer
+    // uses utf8 for all strings internally
+    //
+    // priv_data = send in priv_data pointer from this struct.
+    // buffer = filename, url/stream, etc associated with the key
+    // value = value to set with the key
+    // type = Key to retrive
+    //
+    int (*set_key_with_encoding)(
+    	struct HippoMetadataAPIPrivData* priv_data, 
+    	const char* buffer, const char* value, 
+    	enum HippoMetadataKey  type, 
+    	enum HippoMetaEncoding encoding);
 
 	struct HippoMetadataAPIPrivData* priv_data;
 } HippoMetadataAPI;
 
+#define HippoMetadata_set_key(api, buffer, type, value, error_code) api->set_key(api->priv_data, buffer, type, value, error_code) 
+#define HippoMetadata_set_key_with_encoding(api, buffer, type, value, encode_type, error_code) api->set_key(api->priv_data, buffer, type, value, encode_type, error_code) 
+
+#define HippoMetadata_get_key(api, buffer, type, error_code) api->get_key(api->priv_data, buffer, type, error_code) 
 
 struct HippoServicePrivData;
 
