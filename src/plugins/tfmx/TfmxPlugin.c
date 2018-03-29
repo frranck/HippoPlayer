@@ -111,7 +111,7 @@ static int tfmx_close(void* user_data) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static int tfmx_read_data(void* user_data, void* dest) {
+static int tfmx_read_data(void* user_data, void* dest, uint32_t max_samples) {
 	int16_t temp_data[BUFSIZE] = { 0 };
 
     int block_size = (int)tfmx_get_block_size() / 2;

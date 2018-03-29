@@ -136,7 +136,7 @@ static int mdx_plugin_destroy(void* user_data) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static int mdx_plugin_read_data(void* user_data, void* dest) {
+static int mdx_plugin_read_data(void* user_data, void* dest, uint32_t max_samples) {
 	MDXPlugin* plugin = (MDXPlugin*)user_data;
 	(void)plugin;
 
