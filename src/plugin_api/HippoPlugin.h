@@ -166,23 +166,42 @@ typedef struct HippoPlaybackPlugin {
 	//
 	enum HippoProbeResult (*probe_can_play)(const uint8_t* data, uint32_t data_size, const char* filename, uint64_t total_size);
 
-	const char* (*info)(void* user_data);
-	const char* (*trackInfo)(void* user_data);
+	// Returns a comma separated list of supported extensions
 	const char* (*supported_extensions)();
+
+	// Create an instace of the plugin. The user is expected to return an instance data poniter
+	// that will get passed to the other callback functions.
+	// Also a services pointer is passed down to create function that has various
+	// services that the plugin can use (such as FileIO, metadata registration and more)
+	// see the HippoServicesAPI documentation for mor info
 	void* (*create)(HippoServiceAPI* services);
 
+	// Destroy the instance of the plugin. It's expected that the user will free
+	// the user_data pointer at this point as it won't be used anymore.
 	int (*destroy)(void* user_data);
-	int (*open)(void* user_data, const char* buffer);
-	int (*close)(void* user_data);
-	int (*read_data)(void* user_data, void* dest);
-	int (*seek)(void* user_data, int ms);
-	int (*frame_size)(void* user_data);
-	int (*length)(void* user_data);
 
+	// Opens a buffer to be ready for playback. Buffer may be a file/archived/file or a file or a network resource.
+	// Use the HippoFileAPI that can be optained from services to load the data
+	int (*open)(void* user_data, const char* buffer);
+
+	// Closes the file buffer that was opend in open. Notice that the plugin isn't detroyed at this but but is
+	// here for closing an open file/stream/etc
+	int (*close)(void* user_data);
+
+	// Called when Hippo is requesting sample output from the the plugin.
+	// The plugin is allowed to return as many samples as it want's as long as it does't
+	// go above max sample count
+	int (*read_data)(void* user_data, void* dest, uint32_t max_sample_count);
+
+	// Called when Hippo is requesting a new location in the data
+	int (*seek)(void* user_data, int ms);
 	// Not to be used by plugin, owned by app
-	void* privateData;
+
+	void* priv;
 
 } HippoPlaybackPlugin;
+
+#define HIPPO_PLAYBACK_PLUGIN_API_VERSION 1
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

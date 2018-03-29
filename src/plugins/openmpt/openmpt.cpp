@@ -21,16 +21,12 @@ struct OpenMptData {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static const char* openmpt_info(void* userData) {
-	return 0;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+/*
 static const char* openmpt_track_info(void* userData) {
     OpenMptData* data = (OpenMptData*)userData;
 	return data->song_title.c_str();
 }
+*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -135,17 +131,11 @@ static int openmpt_close(void* user_data) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static int openmpt_frame_size(void* user_data) {
-	return 480 * 2;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-static int openmpt_read_data(void* user_data, void* dest) {
+static int openmpt_read_data(void* user_data, void* dest, uint32_t max_samples) {
 	struct OpenMptData* replayerData = (struct OpenMptData*)user_data;
 
 	// count is number of frames per channel and div by 2 as we have 2 channels
-	const int count = openmpt_frame_size(user_data) / 2;
+	const int count = 480;
     return replayerData->mod->read_interleaved_stereo(48000, count, (float*)dest) * 2;
 }
 
@@ -157,18 +147,18 @@ static int openmpt_seek(void* user_data, int ms) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/*
 static int openmpt_length(void* user_data) {
     OpenMptData* data = (OpenMptData*)user_data;
 	return int(data->length);
 }
+*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static HippoPlaybackPlugin g_openmptPlugin = {
-	1,
+	HIPPO_PLAYBACK_PLUGIN_API_VERSION,
 	openmpt_probe_can_play,
-	openmpt_info,
-	openmpt_track_info,
 	openmpt_supported_extensions,
 	openmpt_create,
 	openmpt_destroy,
@@ -176,13 +166,11 @@ static HippoPlaybackPlugin g_openmptPlugin = {
 	openmpt_close,
 	openmpt_read_data,
 	openmpt_seek,
-	openmpt_frame_size,
-	openmpt_length,
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-extern "C" HIPPO_EXPORT HippoPlaybackPlugin* getPlugin() {
+extern "C" HIPPO_EXPORT HippoPlaybackPlugin* hippo_playback_plugin() {
 	return &g_openmptPlugin;
 }
 
