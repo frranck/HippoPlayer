@@ -37,6 +37,7 @@ use std::mem::transmute;
 use std::slice;
 use std::io::Read;
 use std::collections::HashMap;
+use song_db::SongDb;
 
 struct IoApi {
     pub saved_allocs: HashMap<*const u8, Box<[u8]>>,
@@ -117,7 +118,7 @@ extern "C" fn file_read_to_memory_wrapper(priv_data: *const c_void, filename: *c
 
             let d = file_api.saved_allocs.get(&ptr).unwrap();
 
-            let data_ptr: *const c_void = d.as_ptr() as *const c_void; 
+            let data_ptr: *const c_void = d.as_ptr() as *const c_void;
 
             unsafe {
                 *target = data_ptr;

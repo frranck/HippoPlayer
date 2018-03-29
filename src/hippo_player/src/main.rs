@@ -17,6 +17,7 @@ mod plugin_handler;
 mod audio;
 mod playerview;
 mod playlist;
+mod song_db;
 pub mod service;
 
 use plugin_handler::{Plugins};
