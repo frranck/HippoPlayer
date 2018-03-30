@@ -65,11 +65,9 @@ enum HippoMetadataKey {
     HippoMetadataKey_Artist,
     HippoMetadataKey_Date,
     HippoMetadataKey_Message,
-    HippoMetadataKey_SubSongs,
     HippoMetadataKey_ChannelsCount,
     HippoMetadataKey_PatternsCount,
     HippoMetadataKey_PatternNames,
-    HippoMetadataKey_SampleCount,
     HippoMetadataKey_Samples,
 };
 
@@ -97,9 +95,9 @@ typedef struct HippoMetadataAPI {
     // the error code will be updated.
     //
     const char* (*get_key)(
-    	struct HippoMetadataAPIPrivData* priv_data, 
-    	const char* buffer, 
-    	enum HippoMetadataKey type, 
+    	struct HippoMetadataAPIPrivData* priv_data,
+    	const char* buffer,
+    	enum HippoMetadataKey type,
     	int* error_code);
     //
     // Set a key associated with buffer.
@@ -108,13 +106,14 @@ typedef struct HippoMetadataAPI {
     // buffer = filename, url/stream, etc associated with the key
     // value = value to set with the key
     // type = Key to retrive
-    // 
+    //
     // HippoMetadataResult
     //
     int (*set_key)(
-    	struct HippoMetadataAPIPrivData* priv_data, 
-    	const char* buffer, 
-    	const char* value, 
+    	struct HippoMetadataAPIPrivData* priv_data,
+    	const char* buffer,
+    	uint32_t sub_song,
+    	const char* value,
     	enum HippoMetadataKey type);
 
     //
@@ -129,18 +128,20 @@ typedef struct HippoMetadataAPI {
     // type = Key to retrive
     //
     int (*set_key_with_encoding)(
-    	struct HippoMetadataAPIPrivData* priv_data, 
-    	const char* buffer, const char* value, 
-    	enum HippoMetadataKey  type, 
+    	struct HippoMetadataAPIPrivData* priv_data,
+    	const char* buffer,
+    	uint32_t sub_song,
+    	const char* value,
+    	enum HippoMetadataKey  type,
     	enum HippoMetaEncoding encoding);
 
 	struct HippoMetadataAPIPrivData* priv_data;
 } HippoMetadataAPI;
 
-#define HippoMetadata_set_key(api, buffer, type, value, error_code) api->set_key(api->priv_data, buffer, type, value, error_code) 
-#define HippoMetadata_set_key_with_encoding(api, buffer, type, value, encode_type, error_code) api->set_key(api->priv_data, buffer, type, value, encode_type, error_code) 
+#define HippoMetadata_set_key(api, buffer, type, value, error_code) api->set_key(api->priv_data, buffer, type, value, error_code)
+#define HippoMetadata_set_key_with_encoding(api, buffer, type, value, encode_type, error_code) api->set_key(api->priv_data, buffer, type, value, encode_type, error_code)
 
-#define HippoMetadata_get_key(api, buffer, type, error_code) api->get_key(api->priv_data, buffer, type, error_code) 
+#define HippoMetadata_get_key(api, buffer, type, error_code) api->get_key(api->priv_data, buffer, type, error_code)
 
 struct HippoServicePrivData;
 

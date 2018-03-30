@@ -84,10 +84,21 @@ pub struct CHippoIoAPI {
 
 #[repr(C)]
 #[derive(Debug)]
+pub struct CMetadataAPI {
+    pub get_key: extern "C" fn(priv_data: *const c_void, resource: *const i8, key_type: u32, error_code: *mut i32) -> *const c_void,
+    pub set_key: extern "C" fn(priv_data: *const c_void, resource: *const i8, sub_song: u32, value: *const i8, key_type: u32) -> i32,
+    pub set_key_with_encoding: extern "C" fn(priv_data: *const c_void, resource: *const i8, sub_song: u32, value: *const i8, key_type: u32, encoding: u32) -> i32,
+    pub priv_data: *const c_void,
+}
+
+#[repr(C)]
+#[derive(Debug)]
 pub struct CHippoServiceAPI {
     pub get_io_api: extern "C" fn(priv_data: *const c_void, version: i32) -> *const CHippoIoAPI,
     pub private_data: *const c_void,	// memory handle
 }
+
+
 
 extern "C" fn file_exists_wrapper(priv_data: *const c_void, target: *const u8) -> i32 {
     let file_api: &mut IoApi = unsafe { &mut *(priv_data as *mut IoApi) };
@@ -190,14 +201,40 @@ extern "C" fn file_seek_wrapper(handle: *const c_void, _seek_type: i32, _seek_st
     0
 }
 
-
 extern "C" fn get_io_api_wrapper(priv_data: *const c_void, _version: i32) ->  *const CHippoIoAPI {
     let service_api: &mut ServiceApi = unsafe { &mut *(priv_data as *mut ServiceApi) };
     service_api.get_c_io_api()
 }
 
+
+extern "C" fn metadata_get_key(_priv_data: *const c_void, _resource: *const i8, _key_type: u32, error_code: *mut i32) -> *const c_void {
+    // not implemented yet
+    unsafe { *error_code = -1; }
+    ptr::null()
+    //let res = unsafe { CStr::from_ptr(resource as *const c_char) };
+    //file_api.exists(&filename.to_string_lossy())
+}
+
+extern "C" fn metadata_set_key(priv_data: *const c_void, resource: *const i8, sub_song: u32, value: *const i8, key_type: u32) -> i32 {
+    let song_db: &mut SongDb = unsafe { &mut *(priv_data as *mut SongDb) };
+    // TODO: Use CFixedString
+    let res = unsafe { CStr::from_ptr(resource as *const c_char) };
+    let value = unsafe { CStr::from_ptr(value as *const c_char) };
+
+    if song_db.set_key(&res.to_string_lossy(), sub_song as usize, &value.to_string_lossy(), key_type as usize).is_err() {
+        -1
+    } else {
+        0
+    }
+}
+
+extern "C" fn metadata_set_key_with_encoding(_priv_data: *const c_void, _resource: *const i8, _sub_song: u32, _value: *const i8, _key_type: u32, _encoding: u32) -> i32 {
+    -1
+}
+
 pub struct ServiceApi {
     pub c_io_api: *const CHippoIoAPI,
+    pub c_metadata_api: *const CMetadataAPI,
 }
 
 impl ServiceApi {
@@ -206,6 +243,9 @@ impl ServiceApi {
     }
 
     fn new() -> ServiceApi {
+
+        // setup IO services
+
         let io_api: *const c_void = unsafe { transmute(Box::new(IoApi { saved_allocs: HashMap::new() })) };
 
         let c_io_api = Box::new(CHippoIoAPI {
@@ -222,7 +262,23 @@ impl ServiceApi {
 
         let c_io_api: *const CHippoIoAPI = unsafe { transmute(c_io_api) };
 
-        ServiceApi { c_io_api }
+        // Metadata service
+
+        let metadata_api: *const c_void = unsafe { transmute(Box::new(SongDb::new())) };
+
+        let c_metadata_api = Box::new(CMetadataAPI {
+            priv_data: metadata_api,
+            get_key: metadata_get_key,
+            set_key: metadata_set_key,
+            set_key_with_encoding: metadata_set_key_with_encoding,
+        });
+
+        let c_metadata_api: *const CMetadataAPI = unsafe { transmute(c_metadata_api) };
+
+        ServiceApi {
+            c_io_api,
+            c_metadata_api
+        }
     }
 }
 

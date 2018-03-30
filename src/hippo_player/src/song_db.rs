@@ -44,6 +44,12 @@ pub struct SongDb {
 
 
 impl SongDb {
+    pub fn new() -> SongDb {
+        SongDb {
+            songs: HashMap::new()
+        }
+    }
+
     fn update_song_info(entry: &mut SongInfo, key: usize, value: &str) -> Result<usize, ParseIntError>  {
         match key {
             HIPPOMETADATAKEY_TITLE => entry.title = value.to_owned(),
@@ -60,9 +66,9 @@ impl SongDb {
         Ok(0)
     }
 
-    fn update_entry(entry: &mut SongEntry, key: usize, sub_song: usize, value: &str) {
+    fn update_entry(entry: &mut SongEntry, key: usize, sub_song: usize, value: &str) -> Result<usize, ParseIntError> {
         if sub_song == 0 {
-            Self::update_song_info(&mut entry.song, key, value);
+            Self::update_song_info(&mut entry.song, key, value)?;
         } else {
             // Fix: NLL
             let mut updated_entry = false;
@@ -74,25 +80,29 @@ impl SongDb {
 
             if !updated_entry {
                 let mut song_info = SongInfo::default();
-                Self::update_song_info(&mut song_info, key, value);
+                Self::update_song_info(&mut song_info, key, value)?;
                 entry.sub_songs.insert(sub_song, song_info);
             }
         }
+
+        Ok(0)
     }
 
-    pub fn set_key(&mut self, resource: &str, sub_song: usize, key: usize, value: &str) {
+    pub fn set_key(&mut self, resource: &str, sub_song: usize, value: &str, key: usize) -> Result<usize, ParseIntError> {
         // Fix: NLL
         let mut updated_entry = false;
 
         if let Some(entry) = self.songs.get_mut(resource) {
             updated_entry = true;
-            Self::update_song_info(&mut entry.song, key, value);
+            Self::update_entry(entry, sub_song, key, value)?;
         }
 
         if !updated_entry {
             let mut entry = SongEntry::default();
-            Self::update_song_info(&mut entry.song, key, value);
+            Self::update_entry(&mut entry, sub_song, key, value)?;
             self.songs.insert(resource.to_owned(), entry);
         }
+
+        Ok(0)
     }
 }
