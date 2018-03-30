@@ -95,10 +95,9 @@ pub struct CMetadataAPI {
 #[derive(Debug)]
 pub struct CHippoServiceAPI {
     pub get_io_api: extern "C" fn(priv_data: *const c_void, version: i32) -> *const CHippoIoAPI,
+    pub get_metadata_api: extern "C" fn(priv_data: *const c_void, version: i32) -> *const CMetadataAPI,
     pub private_data: *const c_void,	// memory handle
 }
-
-
 
 extern "C" fn file_exists_wrapper(priv_data: *const c_void, target: *const u8) -> i32 {
     let file_api: &mut IoApi = unsafe { &mut *(priv_data as *mut IoApi) };
@@ -206,6 +205,11 @@ extern "C" fn get_io_api_wrapper(priv_data: *const c_void, _version: i32) ->  *c
     service_api.get_c_io_api()
 }
 
+extern "C" fn get_metadata_api(priv_data: *const c_void, _version: i32) ->  *const CMetadataAPI {
+    let service_api: &mut ServiceApi = unsafe { &mut *(priv_data as *mut ServiceApi) };
+    service_api.get_c_metadatao_api()
+}
+
 
 extern "C" fn metadata_get_key(_priv_data: *const c_void, _resource: *const i8, _key_type: u32, error_code: *mut i32) -> *const c_void {
     // not implemented yet
@@ -240,6 +244,10 @@ pub struct ServiceApi {
 impl ServiceApi {
     fn get_c_io_api(&self) -> *const CHippoIoAPI {
         self.c_io_api
+    }
+
+    fn get_c_metadatao_api(&self) -> *const CMetadataAPI {
+        self.c_metadata_api
     }
 
     fn new() -> ServiceApi {
@@ -292,6 +300,7 @@ impl PluginService {
 
         let c_service_api = Box::new(CHippoServiceAPI {
             get_io_api: get_io_api_wrapper,
+            get_metadata_api: get_metadata_api,
             private_data: service_api,
         });
 

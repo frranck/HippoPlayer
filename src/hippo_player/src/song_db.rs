@@ -90,6 +90,9 @@ impl SongDb {
 
     pub fn set_key(&mut self, resource: &str, sub_song: usize, value: &str, key: usize) -> Result<usize, ParseIntError> {
         // Fix: NLL
+		
+		println!("Set key {} - {} - {} - {}", resource, sub_song, value, key);
+
         let mut updated_entry = false;
 
         if let Some(entry) = self.songs.get_mut(resource) {

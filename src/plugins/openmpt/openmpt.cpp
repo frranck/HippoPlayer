@@ -9,6 +9,7 @@
 const int MAX_EXT_COUNT = 16 * 1024;
 static char s_supported_extensions[MAX_EXT_COUNT];
 static HippoIoAPI* g_io_api = nullptr;
+static HippoMetadataAPI* g_metadata_api = nullptr;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -57,6 +58,7 @@ static void* openmpt_create(HippoServiceAPI* service_api) {
     OpenMptData* user_data = new OpenMptData;
 
     g_io_api = HippoServiceAPI_get_io_api(service_api, 1);
+    g_metadata_api = HippoServiceAPI_get_metadata_api(service_api, 1);
 
 	return (void*)user_data;
 }
@@ -107,9 +109,14 @@ static int openmpt_open(void* user_data, const char* filename) {
         return -1;
     }
 
+
     replayer_data->mod = new openmpt::module(replayer_data->song_data, size);
     replayer_data->song_title = replayer_data->mod->get_metadata("title");
     replayer_data->length = replayer_data->mod->get_duration_seconds();
+
+	const std::string& title = replayer_data->mod->get_metadata("title");
+
+	HippoMetadata_set_key(g_metadata_api, filename, 0, title.c_str(), HippoMetadataKey_Title);
 
 	return 0;
 }
