@@ -99,6 +99,7 @@ static HippoProbeResult openmpt_probe_can_play(const uint8_t* data, uint32_t dat
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static int openmpt_open(void* user_data, const char* filename) {
+	char keyname[32];
     uint64_t size = 0;
 	struct OpenMptData* replayer_data = (struct OpenMptData*)user_data;
 
@@ -109,14 +110,32 @@ static int openmpt_open(void* user_data, const char* filename) {
         return -1;
     }
 
-
     replayer_data->mod = new openmpt::module(replayer_data->song_data, size);
     replayer_data->song_title = replayer_data->mod->get_metadata("title");
     replayer_data->length = replayer_data->mod->get_duration_seconds();
 
-	const std::string& title = replayer_data->mod->get_metadata("title");
+    const auto& mod = replayer_data->mod;
 
-	HippoMetadata_set_key(g_metadata_api, filename, 0, title.c_str(), HippoMetadataKey_Title);
+	HippoMetadata_set_key(g_metadata_api, filename, 0, mod->get_metadata("title").c_str(), "title");
+	HippoMetadata_set_key(g_metadata_api, filename, 0, mod->get_metadata("type_long").c_str(), "type");
+	HippoMetadata_set_key(g_metadata_api, filename, 0, mod->get_metadata("tracker").c_str(), "authoring_tool");
+	HippoMetadata_set_key(g_metadata_api, filename, 0, mod->get_metadata("artist").c_str(), "artist");
+	HippoMetadata_set_key(g_metadata_api, filename, 0, mod->get_metadata("date").c_str(), "date");
+	HippoMetadata_set_key(g_metadata_api, filename, 0, mod->get_metadata("message_raw").c_str(), "message");
+
+	int i = 1;
+
+	for (const auto& sample : mod->get_sample_names()) {
+		sprintf(keyname, "sample_%04d", i++);
+		HippoMetadata_set_key(g_metadata_api, filename, 0, sample.c_str(), keyname);
+	}
+
+	i = 1;
+
+	for (const auto& instrument : mod->get_instrument_names()) {
+		sprintf(keyname, "instrument_%04d", i++);
+		HippoMetadata_set_key(g_metadata_api, filename, 0, instrument.c_str(), keyname);
+	}
 
 	return 0;
 }

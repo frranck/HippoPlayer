@@ -57,20 +57,6 @@ typedef struct HippoIoAPI {
 
 struct HippoMetadataAPIPrivData;
 
-enum HippoMetadataKey {
-    HippoMetadataKey_Title,
-    HippoMetadataKey_Type,
-    HippoMetadataKey_Duration,
-    HippoMetadataKey_AuthoringTool,
-    HippoMetadataKey_Artist,
-    HippoMetadataKey_Date,
-    HippoMetadataKey_Message,
-    HippoMetadataKey_ChannelsCount,
-    HippoMetadataKey_PatternsCount,
-    HippoMetadataKey_PatternNames,
-    HippoMetadataKey_Samples,
-};
-
 enum HippoMetaEncoding {
 	HippoMetaEncoding_UTF8,
 	HippoMetaEncoding_ShiftJS2,
@@ -97,7 +83,7 @@ typedef struct HippoMetadataAPI {
     const char* (*get_key)(
     	struct HippoMetadataAPIPrivData* priv_data,
     	const char* buffer,
-    	enum HippoMetadataKey type,
+    	const char* type,
     	int* error_code);
     //
     // Set a key associated with buffer.
@@ -114,7 +100,7 @@ typedef struct HippoMetadataAPI {
     	const char* buffer,
     	uint32_t sub_song,
     	const char* value,
-    	enum HippoMetadataKey type);
+    	const char* type);
 
     //
     // Set a key associated with buffer with specific ecoding.
@@ -132,7 +118,7 @@ typedef struct HippoMetadataAPI {
     	const char* buffer,
     	uint32_t sub_song,
     	const char* value,
-    	enum HippoMetadataKey  type,
+    	const char* type,
     	enum HippoMetaEncoding encoding);
 
 	struct HippoMetadataAPIPrivData* priv_data;

@@ -1,32 +1,3 @@
-/*
-#[repr(C)]
-pub struct i64 {
-    pub result: i32,
-    pub error_message: *const c_char,
-}
-
-#[repr(C)]
-pub struct CHippoIoAPI {
-    pub exists: extern "C" fn(target: *const i8) -> c_int,
-    pub open: extern "C" fn(priv_data: *const c_void, target: *const i8, handle: **mut u64) -> u64,
-
-    pub close: extern "C" fn(handle: u64) -> i64,
-    pub size: extern "C" fn(handle: u64, res: *mut u64) -> i64,
-    pub read: extern "C" fn(handle: u64, target: *mut c_void, size: u64) -> i64,
-    pub seek: extern "C" fn(handle: u64, seek_type: i32, seek_step: u64) -> i64,
-}
-
-#[repr(C)]
-pub struct CHippoServiceAPI {
-    pub get_io_api: extern "C" fn(priv_data: *mut c_void, version: i32) -> *const CHippoFileAPI,
-    private_data: u64,	// memory handle
-}
-
-fn get_io_api(priv_data: *mut c_void, version: i32) -> *const CHippoIoAPI {
-
-}
-*/
-
 use std::fs::File;
 use std::os::raw::{c_int, c_void, c_char};
 use std::ffi::CStr;
@@ -86,7 +57,7 @@ pub struct CHippoIoAPI {
 #[derive(Debug)]
 pub struct CMetadataAPI {
     pub get_key: extern "C" fn(priv_data: *const c_void, resource: *const i8, key_type: u32, error_code: *mut i32) -> *const c_void,
-    pub set_key: extern "C" fn(priv_data: *const c_void, resource: *const i8, sub_song: u32, value: *const i8, key_type: u32) -> i32,
+    pub set_key: extern "C" fn(priv_data: *const c_void, resource: *const i8, sub_song: u32, value: *const i8, key_type: *const i8) -> i32,
     pub set_key_with_encoding: extern "C" fn(priv_data: *const c_void, resource: *const i8, sub_song: u32, value: *const i8, key_type: u32, encoding: u32) -> i32,
     pub priv_data: *const c_void,
 }
@@ -219,17 +190,16 @@ extern "C" fn metadata_get_key(_priv_data: *const c_void, _resource: *const i8, 
     //file_api.exists(&filename.to_string_lossy())
 }
 
-extern "C" fn metadata_set_key(priv_data: *const c_void, resource: *const i8, sub_song: u32, value: *const i8, key_type: u32) -> i32 {
+extern "C" fn metadata_set_key(priv_data: *const c_void, resource: *const i8, sub_song: u32, value: *const i8, key: *const i8) -> i32 {
     let song_db: &mut SongDb = unsafe { &mut *(priv_data as *mut SongDb) };
     // TODO: Use CFixedString
     let res = unsafe { CStr::from_ptr(resource as *const c_char) };
     let value = unsafe { CStr::from_ptr(value as *const c_char) };
+    let key = unsafe { CStr::from_ptr(key as *const c_char) };
 
-    if song_db.set_key(&res.to_string_lossy(), sub_song as usize, &value.to_string_lossy(), key_type as usize).is_err() {
-        -1
-    } else {
-        0
-    }
+    song_db.set_key( &res.to_string_lossy(), sub_song as usize, &value.to_string_lossy(), &key.to_string_lossy());
+
+    0
 }
 
 extern "C" fn metadata_set_key_with_encoding(_priv_data: *const c_void, _resource: *const i8, _sub_song: u32, _value: *const i8, _key_type: u32, _encoding: u32) -> i32 {
