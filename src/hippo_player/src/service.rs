@@ -220,8 +220,13 @@ impl ServiceApi {
         self.c_metadata_api
     }
 
-    fn new() -> ServiceApi {
+    fn get_song_db<'a>(&'a self) -> &'a SongDb {
+    	let metadata_api = self.get_c_metadatao_api();
+    	let song_db: &SongDb = unsafe { &*((*metadata_api).priv_data as *const SongDb) };
+    	song_db
+    }
 
+    fn new() -> ServiceApi {
         // setup IO services
 
         let io_api: *const c_void = unsafe { transmute(Box::new(IoApi { saved_allocs: HashMap::new() })) };
@@ -279,6 +284,11 @@ impl PluginService {
         PluginService {
             c_service_api: t
         }
+    }
+
+    pub fn get_song_db<'a>(&'a self) -> &'a SongDb {
+    	let service_api: &ServiceApi = unsafe { &*((*self.c_service_api).private_data as *const ServiceApi) };
+    	service_api.get_song_db()
     }
 
     pub fn get_c_service_api(&self) -> *const CHippoServiceAPI {

@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 #[derive(Default, Debug)]
 struct SongInfo {
-	data: HashMap<String, String>,
+    data: HashMap<String, String>,
 }
 
 #[derive(Default, Debug)]
@@ -23,7 +23,7 @@ impl SongDb {
     }
 
     fn update_song_info(entry: &mut SongInfo, key: &str, value: &str) {
-    	entry.data.insert(key.to_owned(), value.to_owned());
+        entry.data.insert(key.to_owned(), value.to_owned());
     }
 
     fn update_entry(entry: &mut SongEntry, sub_song: usize, value: &str, key: &str) {
@@ -48,7 +48,7 @@ impl SongDb {
 
     pub fn set_key(&mut self, resource: &str, sub_song: usize, value: &str, key: &str) {
         // Fix: NLL
-		println!("Set key {} - {} - {} - {}", resource, sub_song, value, key);
+        println!("Set key {} - {} - {} - {}", resource, sub_song, value, key);
 
         let mut updated_entry = false;
 
@@ -61,6 +61,19 @@ impl SongDb {
             let mut entry = SongEntry::default();
             Self::update_entry(&mut entry, sub_song, value, key);
             self.songs.insert(resource.to_owned(), entry);
+        }
+    }
+
+    pub fn get_key(&self, resource: &str, sub_song: usize, key: &str) -> Option<String> { 
+        match self.songs.get(resource) {
+            None => None,
+            Some(entry) => {
+                if sub_song > 0 {
+                    entry.sub_songs.get(&sub_song).and_then(|t| t.data.get(key)).and_then(|v| Some((*v).to_string()))
+                } else {
+                    entry.song.data.get(key).and_then(|v| Some((*v).to_string()))
+                }
+            }
         }
     }
 }
