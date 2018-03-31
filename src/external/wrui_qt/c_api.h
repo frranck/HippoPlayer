@@ -28,6 +28,12 @@ struct PUListWidgetItem;
 struct PUListWidgetItemFuncs;
 struct PUListWidget;
 struct PUListWidgetFuncs;
+struct PULabel;
+struct PULabelFuncs;
+struct PULineEdit;
+struct PULineEditFuncs;
+struct PUPlainTextEdit;
+struct PUPlainTextEditFuncs;
 struct PUSlider;
 struct PUSliderFuncs;
 struct PUMainWindow;
@@ -178,6 +184,61 @@ struct PUListWidgetFuncs {
 
 struct PUListWidget {
     struct PUListWidgetFuncs* funcs;
+    struct PUBase* priv_data;
+};
+
+struct PULabelFuncs {
+    void (*destroy)(struct PUBase* self_c);
+    void (*show)(struct PUBase* self_c);
+    void (*set_fixed_height)(struct PUBase* self_c, int width);
+    void (*set_fixed_width)(struct PUBase* self_c, int width);
+    void (*resize)(struct PUBase* self_c, int width, int height);
+    void (*set_parent)(struct PUBase* self_c, struct PUBase* widget);
+    void (*set_layout)(struct PUBase* self_c, struct PUBase* layout);
+    void (*update)(struct PUBase* self_c);
+    void (*set_text)(struct PUBase* self_c, const char* text);
+};
+
+struct PULabel {
+    struct PULabelFuncs* funcs;
+    struct PUBase* priv_data;
+};
+
+struct PULineEditFuncs {
+    void (*destroy)(struct PUBase* self_c);
+    void (*show)(struct PUBase* self_c);
+    void (*set_fixed_height)(struct PUBase* self_c, int width);
+    void (*set_fixed_width)(struct PUBase* self_c, int width);
+    void (*resize)(struct PUBase* self_c, int width, int height);
+    void (*set_parent)(struct PUBase* self_c, struct PUBase* widget);
+    void (*set_layout)(struct PUBase* self_c, struct PUBase* layout);
+    void (*update)(struct PUBase* self_c);
+    void (*set_text)(struct PUBase* self_c, const char* text);
+    void (*set_read_only)(struct PUBase* self_c, bool value);
+};
+
+struct PULineEdit {
+    struct PULineEditFuncs* funcs;
+    struct PUBase* priv_data;
+};
+
+struct PUPlainTextEditFuncs {
+    void (*destroy)(struct PUBase* self_c);
+    void (*show)(struct PUBase* self_c);
+    void (*set_fixed_height)(struct PUBase* self_c, int width);
+    void (*set_fixed_width)(struct PUBase* self_c, int width);
+    void (*resize)(struct PUBase* self_c, int width, int height);
+    void (*set_parent)(struct PUBase* self_c, struct PUBase* widget);
+    void (*set_layout)(struct PUBase* self_c, struct PUBase* layout);
+    void (*update)(struct PUBase* self_c);
+    void (*clear)(struct PUBase* self_c);
+    void (*set_plain_text)(struct PUBase* self_c, const char* text);
+    void (*append_plain_text)(struct PUBase* self_c, const char* text);
+    void (*set_read_only)(struct PUBase* self_c, bool value);
+};
+
+struct PUPlainTextEdit {
+    struct PUPlainTextEditFuncs* funcs;
     struct PUBase* priv_data;
 };
 
@@ -391,6 +452,7 @@ struct PULayout {
 struct PUVBoxLayoutFuncs {
     void (*destroy)(struct PUBase* self_c);
     void (*add_widget)(struct PUBase* self_c, struct PUBase* widget);
+    void (*add_layout)(struct PUBase* self_c, struct PUBase* layout);
     void (*update)(struct PUBase* self_c);
 };
 
@@ -402,6 +464,7 @@ struct PUVBoxLayout {
 struct PUHBoxLayoutFuncs {
     void (*destroy)(struct PUBase* self_c);
     void (*add_widget)(struct PUBase* self_c, struct PUBase* widget);
+    void (*add_layout)(struct PUBase* self_c, struct PUBase* layout);
     void (*update)(struct PUBase* self_c);
 };
 
@@ -416,6 +479,9 @@ typedef struct PU {
     struct PUPainter (*create_painter)(struct PUBase* self);
     struct PUListWidgetItem (*create_list_widget_item)(struct PUBase* self);
     struct PUListWidget (*create_list_widget)(struct PUBase* self);
+    struct PULabel (*create_label)(struct PUBase* self);
+    struct PULineEdit (*create_line_edit)(struct PUBase* self);
+    struct PUPlainTextEdit (*create_plain_text_edit)(struct PUBase* self);
     struct PUSlider (*create_slider)(struct PUBase* self);
     struct PUMainWindow (*create_main_window)(struct PUBase* self);
     struct PUFramelessWindow (*create_frameless_window)(struct PUBase* self);

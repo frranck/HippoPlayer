@@ -6,6 +6,9 @@
 #include <QPainter>
 #include <QListWidgetItem>
 #include <QListWidget>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPlainTextEdit>
 #include <QSlider>
 #include <QMainWindow>
 #include <QFramelessWindow>
@@ -39,6 +42,9 @@ extern struct PUPushButtonFuncs s_push_button_funcs;
 extern struct PUPainterFuncs s_painter_funcs;
 extern struct PUListWidgetItemFuncs s_list_widget_item_funcs;
 extern struct PUListWidgetFuncs s_list_widget_funcs;
+extern struct PULabelFuncs s_label_funcs;
+extern struct PULineEditFuncs s_line_edit_funcs;
+extern struct PUPlainTextEditFuncs s_plain_text_edit_funcs;
 extern struct PUSliderFuncs s_slider_funcs;
 extern struct PUMainWindowFuncs s_main_window_funcs;
 extern struct PUFramelessWindowFuncs s_frameless_window_funcs;
@@ -152,6 +158,33 @@ static void set_list_widget_drop_event(void* object, void* user_data, void (*eve
     WRListWidget* qt_object = (WRListWidget*)object;
     qt_object->m_drop_user_data = user_data;
     qt_object->m_drop = event;
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class WRLabel : public QLabel {
+public:
+    WRLabel(QWidget* widget) : QLabel(widget) {}
+    virtual ~WRLabel() {}
+
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class WRLineEdit : public QLineEdit {
+public:
+    WRLineEdit(QWidget* widget) : QLineEdit(widget) {}
+    virtual ~WRLineEdit() {}
+
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class WRPlainTextEdit : public QPlainTextEdit {
+public:
+    WRPlainTextEdit(QWidget* widget) : QPlainTextEdit(widget) {}
+    virtual ~WRPlainTextEdit() {}
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -585,6 +618,208 @@ static void set_list_widget_item_double_clicked_event(void* object, void* user_d
     QSlotWrapperSignal_self_ListWidgetItem_void* wrap = new QSlotWrapperSignal_self_ListWidgetItem_void(user_data, (Signal_self_ListWidgetItem_void)event);
     QObject* q_obj = (QObject*)object;
     QObject::connect(q_obj, SIGNAL(itemDoubleClicked(QListWidgetItem*)), wrap, SLOT(method(QListWidgetItem*)));
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void label_show(struct PUBase* self_c) { 
+    WRLabel* qt_data = (WRLabel*)self_c;
+    qt_data->show();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void label_set_fixed_height(struct PUBase* self_c, int width) { 
+    WRLabel* qt_data = (WRLabel*)self_c;
+    qt_data->setFixedHeight(width);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void label_set_fixed_width(struct PUBase* self_c, int width) { 
+    WRLabel* qt_data = (WRLabel*)self_c;
+    qt_data->setFixedWidth(width);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void label_resize(struct PUBase* self_c, int width, int height) { 
+    WRLabel* qt_data = (WRLabel*)self_c;
+    qt_data->resize(width, height);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void label_set_parent(struct PUBase* self_c, struct PUBase* widget) { 
+    WRLabel* qt_data = (WRLabel*)self_c;
+    qt_data->setParent((QWidget*)widget);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void label_set_layout(struct PUBase* self_c, struct PUBase* layout) { 
+    WRLabel* qt_data = (WRLabel*)self_c;
+    qt_data->setLayout((QLayout*)layout);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void label_update(struct PUBase* self_c) { 
+    WRLabel* qt_data = (WRLabel*)self_c;
+    qt_data->update();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void label_set_text(struct PUBase* self_c, const char* text) { 
+    WRLabel* qt_data = (WRLabel*)self_c;
+    qt_data->setText(QString::fromUtf8(text));
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void line_edit_show(struct PUBase* self_c) { 
+    WRLineEdit* qt_data = (WRLineEdit*)self_c;
+    qt_data->show();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void line_edit_set_fixed_height(struct PUBase* self_c, int width) { 
+    WRLineEdit* qt_data = (WRLineEdit*)self_c;
+    qt_data->setFixedHeight(width);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void line_edit_set_fixed_width(struct PUBase* self_c, int width) { 
+    WRLineEdit* qt_data = (WRLineEdit*)self_c;
+    qt_data->setFixedWidth(width);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void line_edit_resize(struct PUBase* self_c, int width, int height) { 
+    WRLineEdit* qt_data = (WRLineEdit*)self_c;
+    qt_data->resize(width, height);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void line_edit_set_parent(struct PUBase* self_c, struct PUBase* widget) { 
+    WRLineEdit* qt_data = (WRLineEdit*)self_c;
+    qt_data->setParent((QWidget*)widget);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void line_edit_set_layout(struct PUBase* self_c, struct PUBase* layout) { 
+    WRLineEdit* qt_data = (WRLineEdit*)self_c;
+    qt_data->setLayout((QLayout*)layout);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void line_edit_update(struct PUBase* self_c) { 
+    WRLineEdit* qt_data = (WRLineEdit*)self_c;
+    qt_data->update();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void line_edit_set_text(struct PUBase* self_c, const char* text) { 
+    WRLineEdit* qt_data = (WRLineEdit*)self_c;
+    qt_data->setText(QString::fromUtf8(text));
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void line_edit_set_read_only(struct PUBase* self_c, bool value) { 
+    WRLineEdit* qt_data = (WRLineEdit*)self_c;
+    qt_data->setReadOnly(value);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void plain_text_edit_show(struct PUBase* self_c) { 
+    WRPlainTextEdit* qt_data = (WRPlainTextEdit*)self_c;
+    qt_data->show();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void plain_text_edit_set_fixed_height(struct PUBase* self_c, int width) { 
+    WRPlainTextEdit* qt_data = (WRPlainTextEdit*)self_c;
+    qt_data->setFixedHeight(width);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void plain_text_edit_set_fixed_width(struct PUBase* self_c, int width) { 
+    WRPlainTextEdit* qt_data = (WRPlainTextEdit*)self_c;
+    qt_data->setFixedWidth(width);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void plain_text_edit_resize(struct PUBase* self_c, int width, int height) { 
+    WRPlainTextEdit* qt_data = (WRPlainTextEdit*)self_c;
+    qt_data->resize(width, height);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void plain_text_edit_set_parent(struct PUBase* self_c, struct PUBase* widget) { 
+    WRPlainTextEdit* qt_data = (WRPlainTextEdit*)self_c;
+    qt_data->setParent((QWidget*)widget);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void plain_text_edit_set_layout(struct PUBase* self_c, struct PUBase* layout) { 
+    WRPlainTextEdit* qt_data = (WRPlainTextEdit*)self_c;
+    qt_data->setLayout((QLayout*)layout);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void plain_text_edit_update(struct PUBase* self_c) { 
+    WRPlainTextEdit* qt_data = (WRPlainTextEdit*)self_c;
+    qt_data->update();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void plain_text_edit_clear(struct PUBase* self_c) { 
+    WRPlainTextEdit* qt_data = (WRPlainTextEdit*)self_c;
+    qt_data->clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void plain_text_edit_set_plain_text(struct PUBase* self_c, const char* text) { 
+    WRPlainTextEdit* qt_data = (WRPlainTextEdit*)self_c;
+    qt_data->setPlainText(QString::fromUtf8(text));
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void plain_text_edit_append_plain_text(struct PUBase* self_c, const char* text) { 
+    WRPlainTextEdit* qt_data = (WRPlainTextEdit*)self_c;
+    qt_data->appendPlainText(QString::fromUtf8(text));
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void plain_text_edit_set_read_only(struct PUBase* self_c, bool value) { 
+    WRPlainTextEdit* qt_data = (WRPlainTextEdit*)self_c;
+    qt_data->setReadOnly(value);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1120,6 +1355,13 @@ static void v_box_layout_add_widget(struct PUBase* self_c, struct PUBase* widget
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+static void v_box_layout_add_layout(struct PUBase* self_c, struct PUBase* layout) { 
+    WRVBoxLayout* qt_data = (WRVBoxLayout*)self_c;
+    qt_data->addLayout((QLayout*)layout);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void v_box_layout_update(struct PUBase* self_c) { 
     WRVBoxLayout* qt_data = (WRVBoxLayout*)self_c;
     qt_data->update();
@@ -1130,6 +1372,13 @@ static void v_box_layout_update(struct PUBase* self_c) {
 static void h_box_layout_add_widget(struct PUBase* self_c, struct PUBase* widget) { 
     QHBoxLayout* qt_data = (QHBoxLayout*)self_c;
     qt_data->addWidget((QWidget*)widget);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void h_box_layout_add_layout(struct PUBase* self_c, struct PUBase* layout) { 
+    WRHBoxLayout* qt_data = (WRHBoxLayout*)self_c;
+    qt_data->addLayout((QLayout*)layout);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1230,6 +1479,42 @@ static struct PUListWidget create_list_widget(struct PUBase* priv_data) {
 
 static void destroy_list_widget(struct PUBase* priv_data) {
     destroy_generic<WRListWidget>(priv_data);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static struct PULabel create_label(struct PUBase* priv_data) {
+    return create_widget_func<struct PULabel, struct PULabelFuncs, WRLabel>(&s_label_funcs, priv_data);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void destroy_label(struct PUBase* priv_data) {
+    destroy_generic<WRLabel>(priv_data);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static struct PULineEdit create_line_edit(struct PUBase* priv_data) {
+    return create_widget_func<struct PULineEdit, struct PULineEditFuncs, WRLineEdit>(&s_line_edit_funcs, priv_data);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void destroy_line_edit(struct PUBase* priv_data) {
+    destroy_generic<WRLineEdit>(priv_data);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static struct PUPlainTextEdit create_plain_text_edit(struct PUBase* priv_data) {
+    return create_widget_func<struct PUPlainTextEdit, struct PUPlainTextEditFuncs, WRPlainTextEdit>(&s_plain_text_edit_funcs, priv_data);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void destroy_plain_text_edit(struct PUBase* priv_data) {
+    destroy_generic<WRPlainTextEdit>(priv_data);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1609,6 +1894,52 @@ struct PUListWidgetFuncs s_list_widget_funcs = {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct PULabelFuncs s_label_funcs = {
+    destroy_label,
+    label_show,
+    label_set_fixed_height,
+    label_set_fixed_width,
+    label_resize,
+    label_set_parent,
+    label_set_layout,
+    label_update,
+    label_set_text,
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct PULineEditFuncs s_line_edit_funcs = {
+    destroy_line_edit,
+    line_edit_show,
+    line_edit_set_fixed_height,
+    line_edit_set_fixed_width,
+    line_edit_resize,
+    line_edit_set_parent,
+    line_edit_set_layout,
+    line_edit_update,
+    line_edit_set_text,
+    line_edit_set_read_only,
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct PUPlainTextEditFuncs s_plain_text_edit_funcs = {
+    destroy_plain_text_edit,
+    plain_text_edit_show,
+    plain_text_edit_set_fixed_height,
+    plain_text_edit_set_fixed_width,
+    plain_text_edit_resize,
+    plain_text_edit_set_parent,
+    plain_text_edit_set_layout,
+    plain_text_edit_update,
+    plain_text_edit_clear,
+    plain_text_edit_set_plain_text,
+    plain_text_edit_append_plain_text,
+    plain_text_edit_set_read_only,
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct PUSliderFuncs s_slider_funcs = {
     destroy_slider,
     slider_show,
@@ -1771,6 +2102,7 @@ struct PULayoutFuncs s_layout_funcs = {
 struct PUVBoxLayoutFuncs s_v_box_layout_funcs = {
     destroy_v_box_layout,
     v_box_layout_add_widget,
+    v_box_layout_add_layout,
     v_box_layout_update,
 };
 
@@ -1779,6 +2111,7 @@ struct PUVBoxLayoutFuncs s_v_box_layout_funcs = {
 struct PUHBoxLayoutFuncs s_h_box_layout_funcs = {
     destroy_h_box_layout,
     h_box_layout_add_widget,
+    h_box_layout_add_layout,
     h_box_layout_update,
 };
 
@@ -1788,6 +2121,9 @@ static struct PU s_pu = {
     create_painter,
     create_list_widget_item,
     create_list_widget,
+    create_label,
+    create_line_edit,
+    create_plain_text_edit,
     create_slider,
     create_main_window,
     create_frameless_window,

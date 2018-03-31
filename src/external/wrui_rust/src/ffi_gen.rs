@@ -171,6 +171,70 @@ pub struct PUListWidget {
 }
 
 #[repr(C)]
+pub struct PULabelFuncs {
+    pub destroy: extern "C" fn(self_c: *const PUBase),
+    pub show: extern "C" fn(self_c: *const PUBase),
+    pub set_fixed_height: extern "C" fn(self_c: *const PUBase, width: i32),
+    pub set_fixed_width: extern "C" fn(self_c: *const PUBase, width: i32),
+    pub resize: extern "C" fn(self_c: *const PUBase, width: i32, height: i32),
+    pub set_parent: extern "C" fn(self_c: *const PUBase, widget: *const PUBase),
+    pub set_layout: extern "C" fn(self_c: *const PUBase, layout: *const PUBase),
+    pub update: extern "C" fn(self_c: *const PUBase),
+    pub set_text: extern "C" fn(self_c: *const PUBase, text: *const ::std::os::raw::c_char),
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct PULabel {
+    pub funcs: *const PULabelFuncs,
+    pub privd: *const PUBase,
+}
+
+#[repr(C)]
+pub struct PULineEditFuncs {
+    pub destroy: extern "C" fn(self_c: *const PUBase),
+    pub show: extern "C" fn(self_c: *const PUBase),
+    pub set_fixed_height: extern "C" fn(self_c: *const PUBase, width: i32),
+    pub set_fixed_width: extern "C" fn(self_c: *const PUBase, width: i32),
+    pub resize: extern "C" fn(self_c: *const PUBase, width: i32, height: i32),
+    pub set_parent: extern "C" fn(self_c: *const PUBase, widget: *const PUBase),
+    pub set_layout: extern "C" fn(self_c: *const PUBase, layout: *const PUBase),
+    pub update: extern "C" fn(self_c: *const PUBase),
+    pub set_text: extern "C" fn(self_c: *const PUBase, text: *const ::std::os::raw::c_char),
+    pub set_read_only: extern "C" fn(self_c: *const PUBase, value: bool),
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct PULineEdit {
+    pub funcs: *const PULineEditFuncs,
+    pub privd: *const PUBase,
+}
+
+#[repr(C)]
+pub struct PUPlainTextEditFuncs {
+    pub destroy: extern "C" fn(self_c: *const PUBase),
+    pub show: extern "C" fn(self_c: *const PUBase),
+    pub set_fixed_height: extern "C" fn(self_c: *const PUBase, width: i32),
+    pub set_fixed_width: extern "C" fn(self_c: *const PUBase, width: i32),
+    pub resize: extern "C" fn(self_c: *const PUBase, width: i32, height: i32),
+    pub set_parent: extern "C" fn(self_c: *const PUBase, widget: *const PUBase),
+    pub set_layout: extern "C" fn(self_c: *const PUBase, layout: *const PUBase),
+    pub update: extern "C" fn(self_c: *const PUBase),
+    pub clear: extern "C" fn(self_c: *const PUBase),
+    pub set_plain_text: extern "C" fn(self_c: *const PUBase, text: *const ::std::os::raw::c_char),
+    pub append_plain_text: extern "C" fn(self_c: *const PUBase, text: *const ::std::os::raw::c_char),
+    pub set_read_only: extern "C" fn(self_c: *const PUBase, value: bool),
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct PUPlainTextEdit {
+    pub funcs: *const PUPlainTextEditFuncs,
+    pub privd: *const PUBase,
+}
+
+#[repr(C)]
 pub struct PUSliderFuncs {
     pub destroy: extern "C" fn(self_c: *const PUBase),
     pub show: extern "C" fn(self_c: *const PUBase),
@@ -433,6 +497,7 @@ pub struct PULayout {
 pub struct PUVBoxLayoutFuncs {
     pub destroy: extern "C" fn(self_c: *const PUBase),
     pub add_widget: extern "C" fn(self_c: *const PUBase, widget: *const PUBase),
+    pub add_layout: extern "C" fn(self_c: *const PUBase, layout: *const PUBase),
     pub update: extern "C" fn(self_c: *const PUBase),
 }
 
@@ -447,6 +512,7 @@ pub struct PUVBoxLayout {
 pub struct PUHBoxLayoutFuncs {
     pub destroy: extern "C" fn(self_c: *const PUBase),
     pub add_widget: extern "C" fn(self_c: *const PUBase, widget: *const PUBase),
+    pub add_layout: extern "C" fn(self_c: *const PUBase, layout: *const PUBase),
     pub update: extern "C" fn(self_c: *const PUBase),
 }
 
@@ -464,6 +530,9 @@ pub struct PU {
     pub create_painter: extern "C" fn(priv_data: *const PUBase) -> PUPainter,
     pub create_list_widget_item: extern "C" fn(priv_data: *const PUBase) -> PUListWidgetItem,
     pub create_list_widget: extern "C" fn(priv_data: *const PUBase) -> PUListWidget,
+    pub create_label: extern "C" fn(priv_data: *const PUBase) -> PULabel,
+    pub create_line_edit: extern "C" fn(priv_data: *const PUBase) -> PULineEdit,
+    pub create_plain_text_edit: extern "C" fn(priv_data: *const PUBase) -> PUPlainTextEdit,
     pub create_slider: extern "C" fn(priv_data: *const PUBase) -> PUSlider,
     pub create_main_window: extern "C" fn(priv_data: *const PUBase) -> PUMainWindow,
     pub create_frameless_window: extern "C" fn(priv_data: *const PUBase) -> PUFramelessWindow,
