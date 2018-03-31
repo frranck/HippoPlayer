@@ -191,6 +191,16 @@ impl Widget {
         }
     }
 
+    pub fn set_parent (&self, widget: &WidgetType) {
+        
+        unsafe {
+            let obj = self.obj.unwrap();
+        
+            ((*obj.funcs).set_parent)(obj.privd, widget.get_widget_type_obj() as *const PUBase);
+        
+        }
+    }
+
     pub fn set_layout (&self, layout: &LayoutType) {
         
         unsafe {
@@ -271,6 +281,16 @@ impl PushButton {
             let obj = self.obj.unwrap();
         
             ((*obj.funcs).resize)(obj.privd, width, height);
+        
+        }
+    }
+
+    pub fn set_parent (&self, widget: &WidgetType) {
+        
+        unsafe {
+            let obj = self.obj.unwrap();
+        
+            ((*obj.funcs).set_parent)(obj.privd, widget.get_widget_type_obj() as *const PUBase);
         
         }
     }
@@ -528,6 +548,16 @@ impl ListWidget {
         }
     }
 
+    pub fn set_parent (&self, widget: &WidgetType) {
+        
+        unsafe {
+            let obj = self.obj.unwrap();
+        
+            ((*obj.funcs).set_parent)(obj.privd, widget.get_widget_type_obj() as *const PUBase);
+        
+        }
+    }
+
     pub fn set_layout (&self, layout: &LayoutType) {
         
         unsafe {
@@ -767,6 +797,16 @@ impl Slider {
         }
     }
 
+    pub fn set_parent (&self, widget: &WidgetType) {
+        
+        unsafe {
+            let obj = self.obj.unwrap();
+        
+            ((*obj.funcs).set_parent)(obj.privd, widget.get_widget_type_obj() as *const PUBase);
+        
+        }
+    }
+
     pub fn set_layout (&self, layout: &LayoutType) {
         
         unsafe {
@@ -847,6 +887,16 @@ impl MainWindow {
             let obj = self.obj.unwrap();
         
             ((*obj.funcs).resize)(obj.privd, width, height);
+        
+        }
+    }
+
+    pub fn set_parent (&self, widget: &WidgetType) {
+        
+        unsafe {
+            let obj = self.obj.unwrap();
+        
+            ((*obj.funcs).set_parent)(obj.privd, widget.get_widget_type_obj() as *const PUBase);
         
         }
     }
@@ -977,6 +1027,16 @@ impl FramelessWindow {
             let obj = self.obj.unwrap();
         
             ((*obj.funcs).resize)(obj.privd, width, height);
+        
+        }
+    }
+
+    pub fn set_parent (&self, widget: &WidgetType) {
+        
+        unsafe {
+            let obj = self.obj.unwrap();
+        
+            ((*obj.funcs).set_parent)(obj.privd, widget.get_widget_type_obj() as *const PUBase);
         
         }
     }
@@ -1300,6 +1360,16 @@ impl Menu {
         }
     }
 
+    pub fn set_parent (&self, widget: &WidgetType) {
+        
+        unsafe {
+            let obj = self.obj.unwrap();
+        
+            ((*obj.funcs).set_parent)(obj.privd, widget.get_widget_type_obj() as *const PUBase);
+        
+        }
+    }
+
     pub fn set_layout (&self, layout: &LayoutType) {
         
         unsafe {
@@ -1412,6 +1482,16 @@ impl MenuBar {
             let obj = self.obj.unwrap();
         
             ((*obj.funcs).resize)(obj.privd, width, height);
+        
+        }
+    }
+
+    pub fn set_parent (&self, widget: &WidgetType) {
+        
+        unsafe {
+            let obj = self.obj.unwrap();
+        
+            ((*obj.funcs).set_parent)(obj.privd, widget.get_widget_type_obj() as *const PUBase);
         
         }
     }

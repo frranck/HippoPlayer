@@ -88,6 +88,7 @@ struct PUWidgetFuncs {
     void (*set_fixed_height)(struct PUBase* self_c, int width);
     void (*set_fixed_width)(struct PUBase* self_c, int width);
     void (*resize)(struct PUBase* self_c, int width, int height);
+    void (*set_parent)(struct PUBase* self_c, struct PUBase* widget);
     void (*set_layout)(struct PUBase* self_c, struct PUBase* layout);
     void (*update)(struct PUBase* self_c);
     void (*set_paint_event)(void* object, void* user_data, void (*event)(void* self_c, struct PUBase* event));
@@ -104,6 +105,7 @@ struct PUPushButtonFuncs {
     void (*set_fixed_height)(struct PUBase* self_c, int width);
     void (*set_fixed_width)(struct PUBase* self_c, int width);
     void (*resize)(struct PUBase* self_c, int width, int height);
+    void (*set_parent)(struct PUBase* self_c, struct PUBase* widget);
     void (*set_layout)(struct PUBase* self_c, struct PUBase* layout);
     void (*update)(struct PUBase* self_c);
     void (*set_pressed_event)(void* object, void* user_data, void (*event)(void* self_c));
@@ -152,6 +154,7 @@ struct PUListWidgetFuncs {
     void (*set_fixed_height)(struct PUBase* self_c, int width);
     void (*set_fixed_width)(struct PUBase* self_c, int width);
     void (*resize)(struct PUBase* self_c, int width, int height);
+    void (*set_parent)(struct PUBase* self_c, struct PUBase* widget);
     void (*set_layout)(struct PUBase* self_c, struct PUBase* layout);
     void (*update)(struct PUBase* self_c);
     void (*add_item)(struct PUBase* self_c, struct PUBase* item);
@@ -184,6 +187,7 @@ struct PUSliderFuncs {
     void (*set_fixed_height)(struct PUBase* self_c, int width);
     void (*set_fixed_width)(struct PUBase* self_c, int width);
     void (*resize)(struct PUBase* self_c, int width, int height);
+    void (*set_parent)(struct PUBase* self_c, struct PUBase* widget);
     void (*set_layout)(struct PUBase* self_c, struct PUBase* layout);
     void (*update)(struct PUBase* self_c);
     void (*set_value_changed_event)(void* object, void* user_data, void (*event)(void* self_c, int value));
@@ -200,6 +204,7 @@ struct PUMainWindowFuncs {
     void (*set_fixed_height)(struct PUBase* self_c, int width);
     void (*set_fixed_width)(struct PUBase* self_c, int width);
     void (*resize)(struct PUBase* self_c, int width, int height);
+    void (*set_parent)(struct PUBase* self_c, struct PUBase* widget);
     void (*set_layout)(struct PUBase* self_c, struct PUBase* layout);
     void (*update)(struct PUBase* self_c);
     bool (*is_animated)(struct PUBase* self_c);
@@ -218,6 +223,7 @@ struct PUFramelessWindowFuncs {
     void (*set_fixed_height)(struct PUBase* self_c, int width);
     void (*set_fixed_width)(struct PUBase* self_c, int width);
     void (*resize)(struct PUBase* self_c, int width, int height);
+    void (*set_parent)(struct PUBase* self_c, struct PUBase* widget);
     void (*set_layout)(struct PUBase* self_c, struct PUBase* layout);
     void (*update)(struct PUBase* self_c);
     void (*set_window_title)(struct PUBase* self_c, const char* title);
@@ -302,6 +308,7 @@ struct PUMenuFuncs {
     void (*set_fixed_height)(struct PUBase* self_c, int width);
     void (*set_fixed_width)(struct PUBase* self_c, int width);
     void (*resize)(struct PUBase* self_c, int width, int height);
+    void (*set_parent)(struct PUBase* self_c, struct PUBase* widget);
     void (*set_layout)(struct PUBase* self_c, struct PUBase* layout);
     void (*update)(struct PUBase* self_c);
     void (*add_action_text)(struct PUBase* self_c, const char* text);
@@ -320,6 +327,7 @@ struct PUMenuBarFuncs {
     void (*set_fixed_height)(struct PUBase* self_c, int width);
     void (*set_fixed_width)(struct PUBase* self_c, int width);
     void (*resize)(struct PUBase* self_c, int width, int height);
+    void (*set_parent)(struct PUBase* self_c, struct PUBase* widget);
     void (*set_layout)(struct PUBase* self_c, struct PUBase* layout);
     void (*update)(struct PUBase* self_c);
     void (*add_menu)(struct PUBase* self_c, struct PUBase* menu);
